@@ -1,0 +1,37 @@
+name: ML Model Comparison
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  train-models:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        model: [logreg, rf, svm]
+        param: [default, tuned]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install scikit-learn
+
+      - name: Train model
+        run: python train.py --model ${{ matrix.model }} --param ${{ matrix.param }}
+
+      - name: Upload metrics
+        uses: actions/upload-artifact@v3
+        with:
+          name: metrics-${{ matrix.model }}-${{ matrix.param }}
+          path: metrics_${{ matrix.model }}_${{ matrix.param }}.json
