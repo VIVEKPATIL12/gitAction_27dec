@@ -1,0 +1,7 @@
+{
+    "model": "svm",
+    "param": "default",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0
+}
