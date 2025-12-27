@@ -35,7 +35,7 @@ jobs:
         run: ls -l
 
       - name: Upload metrics
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4   # ✅ updated to v4
         with:
           name: metrics-${{ matrix.model }}-${{ matrix.param }}
           path: metrics_${{ matrix.model }}_${{ matrix.param }}.json
