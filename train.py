@@ -45,3 +45,4 @@ with open(filename, "w") as f:
     json.dump(metrics, f, indent=4)
 
 print(f"Training complete for {args.model} ({args.param}). Metrics saved to {filename}")
+# End of train.py
