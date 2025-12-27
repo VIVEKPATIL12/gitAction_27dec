@@ -44,8 +44,8 @@ jobs:
 
       - name: Commit and push results
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "vivekpatil12"
+          git config --global user.email "patilvivek3004@gmail.com"
           git add outputs/
           git commit -m "Add metrics and model for ${{ matrix.model }}-${{ matrix.param }}"
           git push origin main
