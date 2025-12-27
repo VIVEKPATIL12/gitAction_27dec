@@ -1,5 +1,6 @@
 import argparse
 import json
+import joblib
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -18,13 +19,24 @@ data = load_iris()
 X, y = data.data, data.target
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Select model
+# Select model + parameters
 if args.model == "logreg":
-    model = LogisticRegression(max_iter=200)
+    if args.param == "tuned":
+        model = LogisticRegression(max_iter=500, solver="liblinear")
+    else:
+        model = LogisticRegression(max_iter=200)
+
 elif args.model == "rf":
-    model = RandomForestClassifier(n_estimators=100)
+    if args.param == "tuned":
+        model = RandomForestClassifier(n_estimators=200, max_depth=5)
+    else:
+        model = RandomForestClassifier(n_estimators=100)
+
 elif args.model == "svm":
-    model = SVC(kernel="linear")
+    if args.param == "tuned":
+        model = SVC(kernel="rbf", C=2)
+    else:
+        model = SVC(kernel="linear")
 
 # Train
 model.fit(X_train, y_train)
@@ -40,9 +52,14 @@ metrics = {
 }
 
 # Save metrics
-filename = f"metrics_{args.model}_{args.param}.json"
-with open(filename, "w") as f:
+metrics_file = f"metrics_{args.model}_{args.param}.json"
+with open(metrics_file, "w") as f:
     json.dump(metrics, f, indent=4)
 
-print(f"Training complete for {args.model} ({args.param}). Metrics saved to {filename}")
-# End of train.py
+# Save model with descriptive name
+model_file = f"model_{args.model}_{args.param}.pkl"
+joblib.dump(model, model_file)
+
+print(f"✅ Training complete for {args.model} ({args.param})")
+print(f"📊 Metrics saved to {metrics_file}")
+print(f"💾 Model saved to {model_file}")
